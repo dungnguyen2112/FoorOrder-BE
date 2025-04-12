@@ -17,7 +17,8 @@ public class CorsConfig {
 
         // cho phép các URL nào có thể kết nối tới backend
         configuration.setAllowedOrigins(
-                Arrays.asList("http://localhost:3000", "http://localhost:4173", "http://localhost:5173"));
+                Arrays.asList("http://localhost:3000", "http://localhost:4173", "http://localhost:5173",
+                        "https://foororder-be-production.up.railway.app"));
 
         // các method nào đc kết nối
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
