@@ -46,6 +46,11 @@
 			<version>2.2.0</version>
 		</dependency>
 		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http44</artifactId>
+			<version>1.32.2</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.api-client</groupId>
 			<artifactId>google-api-client-jackson2</artifactId>
 			<version>2.2.0</version>			<!-- Phải khớp với google-api-client -->
