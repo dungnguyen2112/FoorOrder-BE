@@ -1,11 +1,8 @@
 package com.example.cosmeticsshop.domain.response;
 
 import java.time.Instant;
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
-=======
->>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.DecimalMin;
@@ -35,7 +32,6 @@ public class ResProductDTO {
     private String categoryName;
     private Instant createdAt;
     private Instant updatedAt;
-<<<<<<< HEAD
     private List<ProductImageDTO> additionalImages = new ArrayList<>();
 
     @Getter
@@ -48,6 +44,4 @@ public class ResProductDTO {
         private String alt;
         private int displayOrder;
     }
-=======
->>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 }

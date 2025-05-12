@@ -37,12 +37,9 @@ public class User {
     @Column(nullable = false)
     private String passwordHash;
 
-<<<<<<< HEAD
     @Column(length = 6)
     private String pin;
 
-=======
->>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
     private String phone;
     private String name;
     private String address;
