@@ -1,6 +1,7 @@
 package com.example.cosmeticsshop.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -8,8 +9,10 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.cosmeticsshop.domain.History;
 import com.example.cosmeticsshop.domain.PasswordResetToken;
 import com.example.cosmeticsshop.domain.Role;
 import com.example.cosmeticsshop.domain.User;
@@ -19,9 +22,12 @@ import com.example.cosmeticsshop.domain.response.ResCreateUserDTO;
 import com.example.cosmeticsshop.domain.response.ResUpdateUserDTO;
 import com.example.cosmeticsshop.domain.response.ResUserDTO;
 import com.example.cosmeticsshop.domain.response.ResultPaginationDTO;
+
 import com.example.cosmeticsshop.repository.PasswordResetTokenRepository;
 import com.example.cosmeticsshop.repository.RoleRepository;
 import com.example.cosmeticsshop.repository.UserRepository;
+import com.example.cosmeticsshop.repository.WishListRepository;
+import com.example.cosmeticsshop.util.constant.RoyaltyEnum;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -34,13 +40,22 @@ public class UserService {
     private final RoleService roleService;
     private final RoleRepository roleRepository;
     private final PasswordResetTokenRepository tokenRepository;
+    private final WishListRepository wishListRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, RoleService roleService, RoleRepository roleRepository,
-            PasswordResetTokenRepository tokenRepository) {
+    public UserService(
+            UserRepository userRepository,
+            RoleService roleService,
+            RoleRepository roleRepository,
+            PasswordResetTokenRepository tokenRepository,
+            WishListRepository wishListRepository,
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.roleRepository = roleRepository;
         this.tokenRepository = tokenRepository;
+        this.wishListRepository = wishListRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User handleCreateUser(UserCreateRequestDTO user) {
@@ -78,8 +93,37 @@ public class UserService {
         return res;
     }
 
+    @Transactional
     public void handleDeleteUser(long id) {
-        this.userRepository.deleteById(id);
+        User user = this.fetchUserById(id);
+        if (user != null) {
+            // 1. Delete password reset tokens associated with the user
+            Optional<PasswordResetToken> tokenOpt = this.tokenRepository.findByUser(user);
+            if (tokenOpt.isPresent()) {
+                this.tokenRepository.delete(tokenOpt.get());
+            }
+
+            // 3. Delete user's wishlist items
+            this.wishListRepository.deleteAllByUser(user);
+
+            // 4. Handle histories and related orders
+            if (user.getHistories() != null && !user.getHistories().isEmpty()) {
+                for (History history : user.getHistories()) {
+                    // Clear orders related to the history
+                    if (history.getOrders() != null) {
+                        history.getOrders().clear();
+                    }
+                }
+                // First detach histories from user to avoid cascading issues
+                user.setHistories(new ArrayList<>());
+                this.userRepository.save(user);
+            }
+
+            // 5. Finally delete the user
+            this.userRepository.deleteById(id);
+
+            log.info("User with ID {} has been deleted along with related records", id);
+        }
     }
 
     public User fetchUserById(long id) {
@@ -229,6 +273,70 @@ public class UserService {
             return this.userRepository.save(newUser);
         }
         return null;
+    }
+
+    // Cập nhật phương thức updateUserPin để mã hóa PIN
+    public User updateUserPin(String pin, Long userId) {
+        User existingUser = this.userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với ID: " + userId));
+
+        // Only users with role_id 1 can have PINs
+        if (existingUser.getRole() != null && existingUser.getRole().getId() == 1) {
+            // Mã hóa PIN trước khi lưu vào database
+            String hashedPin = this.passwordEncoder.encode(pin);
+            existingUser.setPin(hashedPin);
+            return this.userRepository.save(existingUser);
+        } else {
+            throw new RuntimeException("Chỉ tài khoản admin (role_id = 1) mới cần PIN");
+        }
+    }
+
+    /**
+     * Kiểm tra PIN có khớp với PIN đã lưu trong database không
+     * Hỗ trợ cả PIN đã mã hóa và chưa mã hóa (trong giai đoạn chuyển tiếp)
+     */
+    public boolean verifyPin(String rawPin, String storedPin) {
+        if (rawPin == null || storedPin == null) {
+            return false;
+        }
+
+        // Trường hợp 1: PIN đã được mã hóa - sử dụng matcher của Spring Security
+        if (this.passwordEncoder.matches(rawPin, storedPin)) {
+            return true;
+        }
+
+        // Trường hợp 2: PIN chưa được mã hóa - so sánh trực tiếp (hỗ trợ cho dữ liệu
+        // cũ)
+        if (rawPin.equals(storedPin)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // Create a user from a User entity (for Google login)
+    public User createUser(User user) {
+        // Set default role if not set
+        if (user.getRole() == null) {
+            Role defaultRole = roleRepository.findById(2L).orElse(null); // Assuming 2 is the default user role
+            user.setRole(defaultRole);
+        }
+
+        // Set default royalty if not set
+        if (user.getRoyalty() == null) {
+            user.setRoyalty(RoyaltyEnum.BRONZE);
+        }
+
+        return userRepository.save(user);
+    }
+
+    /**
+     * Tìm tất cả người dùng có vai trò admin (role_id = 1)
+     * 
+     * @return Danh sách các admin users
+     */
+    public List<User> findAllAdminUsers() {
+        return userRepository.findByRoleId(1L);
     }
 
 }
