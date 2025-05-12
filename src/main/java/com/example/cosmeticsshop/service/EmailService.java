@@ -4,7 +4,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
+<<<<<<< HEAD
 import com.example.cosmeticsshop.dto.ContactFormDTO;
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -24,7 +27,10 @@ public class EmailService {
     private final MailSender mailSender;
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
+<<<<<<< HEAD
     private static final String ADMIN_EMAIL = "nguyentridung20044@gmail.com";
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 
     public EmailService(MailSender mailSender,
             JavaMailSender javaMailSender,
@@ -97,6 +103,7 @@ public class EmailService {
         this.sendEmailSync(to, subject, content, false, true);
     }
 
+<<<<<<< HEAD
     /**
      * Gửi email từ form liên hệ tới Admin
      */
@@ -153,4 +160,6 @@ public class EmailService {
             System.out.println("Lỗi khi gửi email xác nhận: " + e.getMessage());
         }
     }
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 }

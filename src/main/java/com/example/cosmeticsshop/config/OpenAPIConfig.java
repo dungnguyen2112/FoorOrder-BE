@@ -61,3 +61,7 @@ public class OpenAPIConfig {
                 .components(new Components().addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()));
     }
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1

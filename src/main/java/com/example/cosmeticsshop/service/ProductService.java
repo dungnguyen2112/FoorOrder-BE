@@ -195,10 +195,9 @@ public class ProductService {
 
     public List<ResProductDTO> getTopSellingProducts(int limit, Long excludeId) {
         // Tăng giới hạn lên để đảm bảo có đủ sản phẩm sau khi lọc
-        int fetchLimit = excludeId != null ? limit + 5 : limit;
 
         // Tạo PageRequest để lấy các sản phẩm được sắp xếp theo số lượng bán giảm dần
-        PageRequest pageRequest = PageRequest.of(0, fetchLimit,
+        PageRequest pageRequest = PageRequest.of(0, limit,
                 org.springframework.data.domain.Sort.by("sold").descending());
 
         // Lấy sản phẩm từ repository

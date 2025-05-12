@@ -1,7 +1,10 @@
 package com.example.cosmeticsshop.service;
 
 import java.time.LocalDateTime;
+<<<<<<< HEAD
 import java.util.ArrayList;
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,10 +12,15 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+<<<<<<< HEAD
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.cosmeticsshop.domain.History;
+=======
+import org.springframework.stereotype.Service;
+
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 import com.example.cosmeticsshop.domain.PasswordResetToken;
 import com.example.cosmeticsshop.domain.Role;
 import com.example.cosmeticsshop.domain.User;
@@ -22,12 +30,18 @@ import com.example.cosmeticsshop.domain.response.ResCreateUserDTO;
 import com.example.cosmeticsshop.domain.response.ResUpdateUserDTO;
 import com.example.cosmeticsshop.domain.response.ResUserDTO;
 import com.example.cosmeticsshop.domain.response.ResultPaginationDTO;
+<<<<<<< HEAD
 
 import com.example.cosmeticsshop.repository.PasswordResetTokenRepository;
 import com.example.cosmeticsshop.repository.RoleRepository;
 import com.example.cosmeticsshop.repository.UserRepository;
 import com.example.cosmeticsshop.repository.WishListRepository;
 import com.example.cosmeticsshop.util.constant.RoyaltyEnum;
+=======
+import com.example.cosmeticsshop.repository.PasswordResetTokenRepository;
+import com.example.cosmeticsshop.repository.RoleRepository;
+import com.example.cosmeticsshop.repository.UserRepository;
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +54,7 @@ public class UserService {
     private final RoleService roleService;
     private final RoleRepository roleRepository;
     private final PasswordResetTokenRepository tokenRepository;
+<<<<<<< HEAD
     private final WishListRepository wishListRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -50,12 +65,20 @@ public class UserService {
             PasswordResetTokenRepository tokenRepository,
             WishListRepository wishListRepository,
             PasswordEncoder passwordEncoder) {
+=======
+
+    public UserService(UserRepository userRepository, RoleService roleService, RoleRepository roleRepository,
+            PasswordResetTokenRepository tokenRepository) {
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.roleRepository = roleRepository;
         this.tokenRepository = tokenRepository;
+<<<<<<< HEAD
         this.wishListRepository = wishListRepository;
         this.passwordEncoder = passwordEncoder;
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
     }
 
     public User handleCreateUser(UserCreateRequestDTO user) {
@@ -93,6 +116,7 @@ public class UserService {
         return res;
     }
 
+<<<<<<< HEAD
     @Transactional
     public void handleDeleteUser(long id) {
         User user = this.fetchUserById(id);
@@ -124,6 +148,10 @@ public class UserService {
 
             log.info("User with ID {} has been deleted along with related records", id);
         }
+=======
+    public void handleDeleteUser(long id) {
+        this.userRepository.deleteById(id);
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
     }
 
     public User fetchUserById(long id) {
@@ -275,6 +303,7 @@ public class UserService {
         return null;
     }
 
+<<<<<<< HEAD
     // Cập nhật phương thức updateUserPin để mã hóa PIN
     public User updateUserPin(String pin, Long userId) {
         User existingUser = this.userRepository.findById(userId)
@@ -339,4 +368,6 @@ public class UserService {
         return userRepository.findByRoleId(1L);
     }
 
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 }

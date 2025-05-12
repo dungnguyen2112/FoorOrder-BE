@@ -75,6 +75,7 @@ public class CategoryService {
         return resCategoryDTO;
     }
 
+<<<<<<< HEAD
     public ResCategoryDTO convertCategorytDto(Category category) {
         ResCategoryDTO resCategoryDTO = new ResCategoryDTO();
         resCategoryDTO.setId(category.getId());
@@ -84,6 +85,8 @@ public class CategoryService {
         return resCategoryDTO;
     }
 
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
     public Category createCategory(Category category) {
         return categoryRepository.save(category);
     }

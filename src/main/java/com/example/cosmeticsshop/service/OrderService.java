@@ -1,7 +1,11 @@
 package com.example.cosmeticsshop.service;
 
 import com.example.cosmeticsshop.domain.History;
+<<<<<<< HEAD
 
+=======
+import com.example.cosmeticsshop.domain.Notification;
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 import com.example.cosmeticsshop.domain.Order;
 import com.example.cosmeticsshop.domain.OrderDetail;
 import com.example.cosmeticsshop.domain.Product;
@@ -271,6 +275,7 @@ public class OrderService {
         order.setCreatedAt(Instant.now());
         order.setUpdatedAt(Instant.now());
         order.setPaymentStatus(PaymentStatus.NOT_PAID);
+<<<<<<< HEAD
 
         // Set payment method
         if (orderRequest.getPaymentMethod() != null) {
@@ -285,6 +290,8 @@ public class OrderService {
             order.setPaymentMethod("COD"); // Default to COD
         }
 
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
         if (!orderRequest.getTableNumber().equals("Ăn tại nhà")) {
             table.setStatus(TableEnum.BUSY);
             resTableRepository.save(table);
@@ -337,6 +344,7 @@ public class OrderService {
         order.setHistory(history);
         orderRepository.save(order); // Cập nhật lại Order với History
 
+<<<<<<< HEAD
         // ✅ Gửi email xác nhận đơn hàng - chỉ gửi cho COD
         if ("COD".equals(order.getPaymentMethod())) {
             List<Map<String, Object>> orderItemList = orderDetails.stream()
@@ -361,6 +369,46 @@ public class OrderService {
                     orderItemList, order.getTotalPrice() + "");
         }
 
+=======
+        // ✅ Gửi email xác nhận đơn hàng
+        List<Map<String, Object>> orderItemList = orderDetails.stream()
+                .map(item -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("name", item.getName());
+                    map.put("quantity", item.getQuantity());
+                    map.put("price", item.getPrice());
+                    return map;
+                })
+                .collect(Collectors.toList());
+        Map<String, Object> emailModel = new HashMap<>();
+        emailModel.put("name", user.getName()); // Đổi "customerName" thành "name"
+        emailModel.put("orderItems", orderItemList);
+        emailModel.put("totalPrice", order.getTotalPrice());
+
+        emailService.sendEmailFromTemplateSync(user.getEmail(), "Xác nhận đơn hàng", "confirm", user.getUsername(),
+                orderItemList, order.getTotalPrice() + "");
+
+        emailService.sendEmailFromTemplateSync("nguyentridung20044@gmail.com", "Có đơn hàng mới", "neworder",
+                user.getUsername(),
+                orderItemList, order.getTotalPrice() + "");
+
+        // Lấy admin để gửi thông báo
+        // User admin = userRepository.findByUsername("admin");
+
+        // // Tạo thông báo
+        // Notification notification = new Notification();
+        // notification.setSender(user);
+        // notification.setReceiver(admin);
+        // notification.setContent(
+        // "Khách hàng " + orderRequest.getName() + " đã đặt đơn hàng #" +
+        // order.getId());
+        // notification.setRead(false);
+        // notification.setCreatedAt(Date.from(Instant.now()));
+        // notification.setRedirectUrl("/api/v1/orders/" + order.getId());
+
+        // // Gửi thông báo qua WebSocket
+        // notificationService.sendNotification(notification);
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
         // Trả về OrderResponse
         return new OrderResponse(order.getId(), order.getName(),
                 order.getAddress(), order.getPhone(), order.getTotalPrice(), order.getPaymentStatus(),
@@ -429,6 +477,7 @@ public class OrderService {
             user.setName(user.getName());
             user.setPhone(user.getPhone());
             userRepository.save(user);
+<<<<<<< HEAD
 
             // Nếu thanh toán VNPay thành công, gửi email xác nhận
             if ("VNPAY".equals(order.getPaymentMethod())) {
@@ -456,11 +505,14 @@ public class OrderService {
                     System.err.println("Lỗi gửi email: " + e.getMessage());
                 }
             }
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
         }
         order.setPaymentStatus(status);
         return orderRepository.save(order);
     }
 
+<<<<<<< HEAD
     /**
      * Find an order by its payment reference
      * 
@@ -484,4 +536,6 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 }
