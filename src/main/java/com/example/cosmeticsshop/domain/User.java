@@ -36,8 +36,7 @@ public class User {
     @NotBlank(message = "password không được để trống")
     @Column(nullable = false)
     private String passwordHash;
-
-    @Column(length = 6)
+    @Column(columnDefinition = "VARCHAR(255)")
     private String pin;
 
     private String phone;
