@@ -4,6 +4,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
+<<<<<<< HEAD
+import com.example.cosmeticsshop.dto.ContactFormDTO;
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -23,6 +27,10 @@ public class EmailService {
     private final MailSender mailSender;
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
+<<<<<<< HEAD
+    private static final String ADMIN_EMAIL = "nguyentridung20044@gmail.com";
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 
     public EmailService(MailSender mailSender,
             JavaMailSender javaMailSender,
@@ -95,4 +103,63 @@ public class EmailService {
         this.sendEmailSync(to, subject, content, false, true);
     }
 
+<<<<<<< HEAD
+    /**
+     * Gửi email từ form liên hệ tới Admin
+     */
+    @Async
+    public void sendContactFormEmail(ContactFormDTO contactForm) {
+        try {
+            // Tạo nội dung email cho admin
+            Context context = new Context();
+            context.setVariable("name", contactForm.getName());
+            context.setVariable("email", contactForm.getEmail());
+            context.setVariable("subject", contactForm.getSubject());
+            context.setVariable("message", contactForm.getMessage());
+
+            String htmlContent = templateEngine.process("contact-form", context);
+
+            // Tạo email để gửi cho admin
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setTo(ADMIN_EMAIL);
+            helper.setReplyTo(contactForm.getEmail());
+            helper.setSubject("Tin nhắn liên hệ từ: " + contactForm.getName());
+            helper.setText(htmlContent, true);
+
+            // Gửi email
+            javaMailSender.send(mimeMessage);
+
+            // Gửi email xác nhận cho người dùng
+            sendContactConfirmationEmail(contactForm.getEmail(), contactForm.getName());
+
+        } catch (MessagingException e) {
+            throw new RuntimeException("Không thể gửi email liên hệ", e);
+        }
+    }
+
+    /**
+     * Gửi email xác nhận cho người gửi liên hệ
+     */
+    @Async
+    private void sendContactConfirmationEmail(String to, String name) {
+        try {
+            Context context = new Context();
+            context.setVariable("name", name);
+
+            String htmlContent = templateEngine.process("contact-confirmation", context);
+
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setTo(to);
+            helper.setSubject("Xác nhận đã nhận tin nhắn liên hệ");
+            helper.setText(htmlContent, true);
+
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            System.out.println("Lỗi khi gửi email xác nhận: " + e.getMessage());
+        }
+    }
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 }

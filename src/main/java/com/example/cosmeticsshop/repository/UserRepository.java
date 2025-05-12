@@ -2,6 +2,11 @@ package com.example.cosmeticsshop.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+<<<<<<< HEAD
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 import org.springframework.stereotype.Repository;
 
 import com.example.cosmeticsshop.domain.User;
@@ -20,4 +25,15 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     boolean existsByUsername(String username);
 
+<<<<<<< HEAD
+    /**
+     * Tìm tất cả người dùng với role_id cụ thể
+     * 
+     * @param roleId ID của role cần tìm
+     * @return Danh sách User có role.id tương ứng
+     */
+    @Query("SELECT u FROM User u WHERE u.role.id = :roleId")
+    List<User> findByRoleId(@Param("roleId") Long roleId);
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 }

@@ -70,7 +70,11 @@ public class SecurityConfiguration {
                 "/v3/api-docs/**",
                 "/swagger-ui/**",
                 "/swagger-ui.html",
-                "/api/v1/auth/**"
+                "/api/v1/auth/**",
+                "/api/v1/chat",
+                "/api/v1/payment/vnpay/**",
+                "/api/contact/**",
+                "/api/v1/products/{id}"
         };
 
         http

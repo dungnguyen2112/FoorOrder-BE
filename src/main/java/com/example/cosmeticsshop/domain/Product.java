@@ -2,11 +2,20 @@ package com.example.cosmeticsshop.domain;
 
 import java.io.Serializable;
 import java.time.Instant;
+<<<<<<< HEAD
+import java.util.ArrayList;
+import java.util.List;
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 
 import org.springframework.data.relational.core.sql.In;
 
 import com.example.cosmeticsshop.util.SecurityUtil;
 
+<<<<<<< HEAD
+import jakarta.persistence.CascadeType;
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +23,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+<<<<<<< HEAD
+import jakarta.persistence.OneToMany;
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -75,6 +88,24 @@ public class Product implements Serializable {
     private Instant createdAt;
     private Instant updatedAt;
 
+<<<<<<< HEAD
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImage> images = new ArrayList<>();
+
+    // Helper method to add image
+    public void addImage(String imageUrl, String alt, int displayOrder) {
+        ProductImage image = new ProductImage(imageUrl, alt, displayOrder, this);
+        images.add(image);
+    }
+
+    // Helper method to remove image
+    public void removeImage(ProductImage image) {
+        images.remove(image);
+        image.setProduct(null);
+    }
+
+=======
+>>>>>>> cb1e94d527d0d4a608c4adab92e0c6ca81fbaaf1
     public Instant getCreatedAt() {
         return createdAt;
     }
